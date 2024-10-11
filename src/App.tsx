@@ -11,12 +11,15 @@ import { Todo } from './types/Todo';
 import { getTodos } from './api';
 import { getPreparedTodos } from './utils/getPreparedTodos';
 import { getTodoById } from './utils/getTodoById';
+import { CompletionQuery } from './types/CompletionQuery';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
+
   const [searchQuery, setSearchQuery] = useState('');
-  const [completionQuery, setCompletionQuery] = useState('all');
+  const [completionQuery, setCompletionQuery] = useState<CompletionQuery>(CompletionQuery.All);
+
   const [selectedTodoId, setSelectedTodoId] = useState<number>(0);
 
   useEffect(() => {

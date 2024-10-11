@@ -1,11 +1,12 @@
 import { FC } from 'react';
 import { completionOptions } from '../../mocks';
+import { CompletionQuery } from '../../types/CompletionQuery';
 
 type Props = {
   searchQuery: string;
   completionQuery: string;
   onAddSearchQuery: (query: string) => void;
-  onAddCompletionQuery: (query: string) => void;
+  onAddCompletionQuery: (query: CompletionQuery) => void;
 };
 
 export const TodoFilter: FC<Props> = ({
@@ -20,7 +21,9 @@ export const TodoFilter: FC<Props> = ({
         <select
           data-cy="statusSelect"
           value={completionQuery}
-          onChange={event => onAddCompletionQuery(event.target.value)}
+          onChange={event =>
+            onAddCompletionQuery(event.target.value as CompletionQuery)
+          }
         >
           {completionOptions.map(query => (
             <option key={query.name} value={query.value}>
