@@ -18,7 +18,9 @@ export const App: React.FC = () => {
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [completionQuery, setCompletionQuery] = useState<CompletionQuery>(CompletionQuery.All);
+  const [completionQuery, setCompletionQuery] = useState<CompletionQuery>(
+    CompletionQuery.All,
+  );
 
   const [selectedTodoId, setSelectedTodoId] = useState<number>(0);
 
