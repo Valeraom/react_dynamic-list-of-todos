@@ -6,23 +6,28 @@ import { Todo } from '../../types/Todo';
 
 type Props = {
   todo: Todo;
-  onSelect: (userId: number) => void;
+  onClose: () => void;
 };
 
-export const TodoModal: React.FC<Props> = ({ todo, onSelect }) => {
+export const TodoModal: React.FC<Props> = ({ todo, onClose }) => {
   const { id, title, completed, userId } = todo;
 
   const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    getUser(userId).then(setUser);
+    setLoading(true);
+
+    getUser(userId)
+      .then(setUser)
+      .finally(() => setLoading(false));
   }, [userId]);
 
   return (
     <div className="modal is-active" data-cy="modal">
       <div className="modal-background" />
 
-      {!user ? (
+      {loading ? (
         <Loader />
       ) : (
         <div className="modal-card">
@@ -39,7 +44,7 @@ export const TodoModal: React.FC<Props> = ({ todo, onSelect }) => {
               type="button"
               className="delete"
               data-cy="modal-close"
-              onClick={() => onSelect(0)}
+              onClick={onClose}
             />
           </header>
 
@@ -57,7 +62,7 @@ export const TodoModal: React.FC<Props> = ({ todo, onSelect }) => {
 
               {' by '}
 
-              <a href={`mailto:${user.email}`}>{user.name}</a>
+              <a href={`mailto:${user?.email}`}>{user?.name}</a>
             </p>
           </div>
         </div>

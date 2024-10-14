@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import 'bulma/css/bulma.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 
@@ -15,22 +15,28 @@ import { CompletionQuery } from './types/CompletionQuery';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>(todos);
-
   const [searchQuery, setSearchQuery] = useState('');
   const [completionQuery, setCompletionQuery] = useState<CompletionQuery>(
     CompletionQuery.All,
   );
+  const [loading, setLoading] = useState(false);
 
   const [selectedTodoId, setSelectedTodoId] = useState<number>(0);
 
   useEffect(() => {
-    getTodos().then(setTodos);
+    setLoading(true);
+
+    getTodos()
+      .then(setTodos)
+      .finally(() => setLoading(false));
   }, []);
 
-  useEffect(() => {
-    setFilteredTodos(getPreparedTodos(todos, { searchQuery, completionQuery }));
-  }, [todos, searchQuery, completionQuery]);
+  const filteredTodos = useMemo(
+    () => getPreparedTodos(todos, { searchQuery, completionQuery }),
+    [todos, searchQuery, completionQuery],
+  );
+
+  const handleResetSelectedTodoId = () => setSelectedTodoId(0);
 
   const selectedTodo = getTodoById(filteredTodos, selectedTodoId);
 
@@ -51,7 +57,7 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              {!todos.length ? (
+              {loading ? (
                 <Loader />
               ) : (
                 <TodoList
@@ -66,7 +72,7 @@ export const App: React.FC = () => {
       </div>
 
       {selectedTodoId !== 0 && (
-        <TodoModal todo={selectedTodo} onSelect={setSelectedTodoId} />
+        <TodoModal todo={selectedTodo} onClose={handleResetSelectedTodoId} />
       )}
     </>
   );
