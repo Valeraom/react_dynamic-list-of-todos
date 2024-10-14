@@ -23,14 +23,6 @@ export const App: React.FC = () => {
 
   const [selectedTodoId, setSelectedTodoId] = useState<number>(0);
 
-  useEffect(() => {
-    setLoading(true);
-
-    getTodos()
-      .then(setTodos)
-      .finally(() => setLoading(false));
-  }, []);
-
   const filteredTodos = useMemo(
     () => getPreparedTodos(todos, { searchQuery, completionQuery }),
     [todos, searchQuery, completionQuery],
@@ -39,6 +31,16 @@ export const App: React.FC = () => {
   const handleResetSelectedTodoId = () => setSelectedTodoId(0);
 
   const selectedTodo = getTodoById(filteredTodos, selectedTodoId);
+
+  const handleGetTodos = () => {
+    setLoading(true);
+
+    getTodos()
+      .then(setTodos)
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(handleGetTodos, []);
 
   return (
     <>
